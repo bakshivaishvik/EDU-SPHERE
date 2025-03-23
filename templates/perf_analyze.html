@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduSphere</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Add Chart.js -->
+    <link rel="stylesheet" href="../static/perf_analyze.css">
+</head>
+<body>
+    <!-- Background elements -->
+    <div class="space-bg"></div>
+    <div class="nebula"></div>
+    <div class="stars-container" id="starsContainer"></div>
+    <div class="grid-lines"></div>
+    
+    <!-- Hero Section -->
+    <section id="hero" class="hero-section">
+        <div class="container">
+            <div class="text-container">
+                <span id="typed-text" class="typed-text neon-glow"></span><span class="cursor"></span>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Performance Analyzer Section -->
+    <section id="analyzer" class="analyzer-section">
+        <div class="container page-transition">
+            <h1 class="cosmic-title neon-glow">📚 EDULYZER: AI Study Performance Tracker</h1>
+            
+            <div class="upload-section glassmorphism">
+                <label for="fileInput" class="file-label">
+                    <span>Choose File</span>
+                    <input type="file" id="fileInput">
+                </label>
+                <button onclick="uploadFile()" class="glow-button">Upload & Generate Questions</button>
+            </div>
+            
+            <div id="loading" class="loading-container">
+                <div class="loader"></div>
+                <p>Processing... Please wait ⏳</p>
+            </div>
+            
+            <div id="quiz" class="quiz-container glassmorphism"></div>
+            
+            <button onclick="submitAnswers()" id="submitBtn" class="glow-button">Submit Answers</button>
+            
+            <div id="evaluation" class="evaluation-container glassmorphism">
+                <!-- Study suggestion and graphs will be dynamically inserted here -->
+            </div>
+            
+            <div class="roadmap-section">
+                <button onclick="window.location.href='http://localhost:5000/generate_roadmap';" class="secondary-button">Generate Roadmap</button>
+            </div>
+        </div>
+    </section>
+
+    <script src="../static/perf_analyze.js"></script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generated Video</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <h1 class="text-3xl font-bold text-center mb-8">Generated Video</h1>
+
+        <!-- Video Player -->
+        <div class="bg-white p-6 rounded-lg shadow-md max-w-2xl mx-auto">
+            <video controls class="w-full rounded-lg">
+                <source src="{{ url_for('serve_video', video_name=video_name) }}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+
+        <!-- Back Button -->
+        <div class="mt-6 text-center">
+            <a href="/" class="inline-block bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                Generate Another Video
+            </a>
+        </div>
+    </div>
+</body>
+</html>

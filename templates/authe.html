@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Firebase Auth</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <link rel="stylesheet" href="../static/authe.css">
+</head>
+<body>
+    <!-- Dynamic Background Effects -->
+    <div class="space-bg"></div>
+    <div class="stars-container" id="starsContainer"></div>
+    
+    <div class="container">
+        <h1 class="neon-glow neon-purple">EDU-SPHERE</h1>
+        
+        <div class="card-container">
+            <div class="card" id="authCard">
+                <!-- Front - Sign In -->
+                <div class="card-face card-front">
+                    <div class="gradient-border">
+                        <div class="card-content">
+                            <form id="login-form">
+                                <h2 class="neon-glow neon-blue">Sign In</h2>
+                                <div class="input-group">
+                                    <input type="email" id="email" placeholder="Email" required>
+                                </div>
+                                <div class="input-group">
+                                    <input type="password" id="password" placeholder="Password" required>
+                                </div>
+                                <button type="submit" class="btn-primary">Sign In</button>
+                                <p class="toggle-text">Don't have an account? <span class="toggle-btn">Sign Up</span></p>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Back - Sign Up -->
+                <div class="card-face card-back">
+                    <div class="gradient-border">
+                        <div class="card-content">
+                            <form id="signup-form">
+                                <h2 class="neon-glow neon-pink">Sign Up</h2>
+                                <div class="input-group">
+                                    <input type="email" id="signup-email" placeholder="Email" required>
+                                </div>
+                                <div class="input-group">
+                                    <input type="password" id="signup-password" placeholder="Password" required>
+                                </div>
+                                <button type="submit" class="btn-primary">Sign Up</button>
+                                <p class="toggle-text">Already have an account? <span class="toggle-btn">Sign In</span></p>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="error-message" class="error-message"></div>
+    </div>
+
+    <script src="../static/authe.js"></script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Video Analysis App</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../static/style_analysis.css">
+</head>
+<body>
+  <!-- Dynamic Background Effects -->
+  <div class="space-bg"></div>
+  <div class="nebula"></div>
+  <div class="stars-container" id="starsContainer"></div>
+
+  <!-- Main Content -->
+  <div class="container visible">
+    <h1 class="neon-glow neon-purple">Video Analysis App</h1>
+
+    <!-- Upload Section -->
+    <div class="upload-section">
+      <input type="file" id="video-upload" accept="video/*" />
+      <label for="video-upload" class="upload-label glassmorphism">
+        <span id="upload-text">Choose a video file</span>
+        <span id="upload-icon">📁</span>
+      </label>
+    </div>
+
+    <!-- Video Preview Section -->
+    <div id="video-preview" class="video-preview hidden">
+      <video id="preview-video" controls>
+        Your browser does not support the video tag.
+      </video>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div id="loading" class="loading hidden">
+      <div class="spinner"></div>
+      <p>Analyzing video...</p>
+    </div>
+
+    <!-- Results Section -->
+    <div id="results" class="results hidden">
+      <h2 class="neon-glow neon-pink">Analysis Results</h2>
+      <p>Total Duration: <span id="total-duration">0</span> seconds</p>
+      <ul id="activities-list"></ul>
+    </div>
+
+    <!-- Error Section -->
+    <div id="error" class="error hidden">
+      <p>⚠ <span id="error-message"></span></p>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script src="../static/script_analysis.js"></script>
+</body>
+</html>

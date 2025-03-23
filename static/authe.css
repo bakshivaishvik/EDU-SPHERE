@@ -1,0 +1,414 @@
+/* Variables */
+:root {
+    --primary-color: #6366f1;
+    --primary-color-dark: #4f46e5;
+    --secondary-color: #ec4899;
+    --accent-color: #0ea5e9;
+    --background-color: #0f172a;
+    --surface-color: #1e293b;
+    --text-color: #f8fafc;
+    --text-secondary: #cbd5e1;
+    --glass-bg: rgba(30, 41, 59, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+    --gradient: linear-gradient(45deg, #e07777, #e0d677, #90e077, #77e0c1, #7785e0, #e077dd, #e07777);
+    --success: #10b981;
+    --error: #ef4444;
+    --border-radius: 12px;
+}
+
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Rajdhani', sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Typography */
+h1, h2, h3 {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 1.5rem;
+}
+
+/* Neon Glow Effects */
+@keyframes glow {
+    0% {
+        text-shadow: 
+            0 0 5px rgba(99, 102, 241, 0.7),
+            0 0 10px rgba(99, 102, 241, 0.5),
+            0 0 20px rgba(99, 102, 241, 0.3);
+    }
+    100% {
+        text-shadow:
+            0 0 10px rgba(99, 102, 241, 1),
+            0 0 20px rgba(99, 102, 241, 0.7),
+            0 0 40px rgba(99, 102, 241, 0.5);
+    }
+}
+
+.neon-glow {
+    animation: glow 1.5s infinite alternate ease-in-out;
+}
+
+.neon-purple {
+    color: var(--primary-color);
+}
+
+.neon-pink {
+    color: var(--secondary-color);
+}
+
+.neon-blue {
+    color: var(--accent-color);
+}
+
+/* Container */
+.container {
+    width: 100%;
+    max-width: 400px;
+    padding: 2rem;
+    text-align: center;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Card Container and Card */
+.card-container {
+    perspective: 1000px;
+    width: 100%;
+    max-width: 380px;
+    height: 450px;
+    margin: 1rem 0;
+}
+
+.card {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.card.flipped {
+    transform: rotateY(180deg);
+}
+
+.card-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+}
+
+.card-front {
+    transform: rotateY(0deg);
+    z-index: 2;
+}
+
+.card-back {
+    transform: rotateY(180deg);
+}
+
+.card-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: calc(var(--border-radius) - 6px);
+    padding: 2rem;
+}
+
+.gradient-border {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: var(--gradient);
+    padding: 6px;
+    border-radius: var(--border-radius);
+    box-sizing: border-box;
+    animation: gradientRotate 8s linear infinite;
+}
+
+.gradient-border::after {
+    content: "";
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    background: inherit;
+    filter: blur(25px);
+    z-index: -1;
+    border-radius: calc(var(--border-radius) + 10px);
+    opacity: 0.6;
+}
+
+@keyframes gradientRotate {
+    0% {
+        filter: hue-rotate(0deg);
+    }
+    100% {
+        filter: hue-rotate(360deg);
+    }
+}
+
+/* Form Elements */
+form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.input-group {
+    width: 100%;
+    margin-bottom: 1.2rem;
+}
+
+input {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    background: rgba(30, 41, 59, 0.8);
+    color: var(--text-color);
+    border-radius: 8px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1rem;
+    outline: none;
+    transition: all 0.3s ease;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+input:focus {
+    background: rgba(30, 41, 59, 1);
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.5), inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+input::placeholder {
+    color: rgba(203, 213, 225, 0.7);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-color-dark));
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 1px;
+    min-width: 150px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(79, 70, 229, 0.4);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
+}
+
+.btn-primary::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        to bottom right, 
+        rgba(255, 255, 255, 0) 0%, 
+        rgba(255, 255, 255, 0.1) 50%, 
+        rgba(255, 255, 255, 0) 100%
+    );
+    transform: rotate(45deg);
+    transition: all 0.6s ease;
+    z-index: 1;
+    opacity: 0;
+}
+
+.btn-primary:hover::after {
+    animation: shimmer 1.5s infinite;
+    opacity: 1;
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%) rotate(45deg);
+    }
+    100% {
+        transform: translateX(100%) rotate(45deg);
+    }
+}
+
+.toggle-text {
+    margin-top: 1.5rem;
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+}
+
+.toggle-btn {
+    color: var(--primary-color);
+    text-decoration: underline;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+}
+
+.toggle-btn:hover {
+    color: var(--accent-color);
+    text-shadow: 0 0 8px rgba(14, 165, 233, 0.5);
+}
+
+/* Error Message */
+.error-message {
+    color: var(--error);
+    margin-top: 1.5rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-shadow: 0 0 8px rgba(239, 68, 68, 0.5);
+    min-height: 24px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+}
+
+.error-message.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Space Background */
+.space-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at bottom center, #1B2735, #090A0F);
+    z-index: -2;
+}
+
+.space-bg::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at top center, rgba(27, 39, 53, 0.8), transparent);
+    animation: backgroundShift 12s infinite alternate ease-in-out;
+}
+
+@keyframes backgroundShift {
+    from {
+        transform: translateY(0);
+    }
+    to {
+        transform: translateY(20px);
+    }
+}
+
+/* Stars Animation */
+.stars-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.star {
+    position: absolute;
+    background-color: white;
+    border-radius: 50%;
+    animation: twinkle 2s infinite ease-in-out alternate;
+}
+
+@keyframes twinkle {
+    0% {
+        opacity: 0.2;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.comet {
+    position: absolute;
+    width: 2px;
+    height: 80px;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.8));
+    transform: rotate(-45deg);
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+    .container {
+        padding: 1rem;
+    }
+    
+    .card-container {
+        height: 400px;
+        max-width: 320px;
+    }
+    
+    .card-content {
+        padding: 1.5rem;
+    }
+    
+    input {
+        padding: 12px;
+    }
+    
+    h1 {
+        font-size: 1.8rem;
+    }
+    
+    h2 {
+        font-size: 1.4rem;
+    }
+}
+
+.neon-glow {
+    font-size: 2.5rem; /* Adjust size as needed */
+}

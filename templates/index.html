@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edu-Flick - AI Video Generator</title>
+    <meta name="description" content="Create stunning AI-powered educational videos with our advanced generator portal" />
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Rajdhani:wght@300;400;500;700&family=Space+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../static/style.css">
+    <!-- Preload key resources -->
+    <link rel="preload" as="script" href="https://cdn.babylonjs.com/babylon.js">
+    <link rel="preload" as="script" href="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js">
+  </head>
+  <body>
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-90 transition-opacity duration-500">
+      <div class="text-center">
+        <div class="loader mb-4"></div>
+        <h2 class="text-2xl font-bold cosmic-title neon-glow">Loading Experience</h2>
+      </div>
+    </div>
+
+    <!-- Parallax Hero Section -->
+    <div class="parallax">
+      <div class="parallax__visuals">
+        <div class="parallax__black-line-overflow"></div>
+        <div data-parallax-layers class="parallax__layers">
+          <!-- Canvas for dynamic visuals -->
+          <canvas id="renderCanvas"></canvas>
+          <div data-parallax-layer="3" class="parallax__layer-title">
+            <h2 class="parallax__title cosmic-title neon-glow">
+              <span class="neon-purple">Edu-Flick</span>
+            </h2>
+            <p class="text-xl text-gray-300 mt-3">Your AI-powered educational content generator</p>
+          </div>
+        </div>
+        <div class="parallax__fade"></div>
+      </div>
+    </div>
+
+    <!-- Dynamic Background Effects -->
+    <div class="space-bg"></div>
+    <div class="nebula"></div>
+    <div class="stars-container" id="starsContainer"></div>
+
+    <!-- Main Container -->
+    <div class="container mx-auto px-4 py-12 relative z-10">
+      <!-- Header -->
+      <header class="mb-10 text-center">
+        <div class="chip mb-2 inline-block px-3 py-1 bg-purple-900 bg-opacity-50 text-purple-300 text-xs rounded-full border border-purple-500">
+          AI-POWERED
+        </div>
+        <h1 class="cosmic-title text-5xl font-bold mb-3 neon-glow">
+          <span class="neon-purple">EDU</span>-FLICK <span class="neon-pink">GENERATOR</span>
+        </h1>
+        <p class="text-xl text-gray-300 max-w-2xl mx-auto">
+          Create stunning AI-powered educational videos with our advanced generator
+        </p>
+      </header>
+
+      <!-- Tabs Navigation -->
+      <div class="flex flex-wrap justify-center mb-6 gap-2">
+        <div class="tab active" data-tab="generator">
+          <i class="fas fa-video mr-2"></i> Generator
+        </div>
+        <div class="tab" data-tab="templates">
+          <i class="fas fa-layer-group mr-2"></i> Templates
+        </div>
+        <div class="tab" data-tab="history">
+          <i class="fas fa-history mr-2"></i> History
+        </div>
+        <div class="tab" data-tab="settings">
+          <i class="fas fa-cog mr-2"></i> Settings
+        </div>
+      </div>
+
+      <!-- Main Content Area -->
+      <div class="max-w-6xl mx-auto">
+        <!-- Generator Tab -->
+        <div class="tab-content active" id="generator">
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Form Panel -->
+            <div class="lg:col-span-2">
+              <div class="glassmorphism rounded-xl p-6 shadow-lg">
+                <h2 class="text-2xl font-bold mb-4 cosmic-title neon-glow">Video Configuration</h2>
+                
+                <form id="videoForm" class="space-y-6" >
+                  <!-- API Keys Section -->
+                  <div class="glassmorphism p-4 rounded-lg">
+                    <h3 class="text-lg font-semibold mb-3 neon-glow">API Keys</h3>
+                    <div class="space-y-4">
+                      <div>
+                        <label for="geminiApiKey" class="block text-sm font-medium text-gray-300 mb-2">Gemini API Key</label>
+                        <div class="relative">
+                          <input
+                            type="password"
+                            id="geminiApiKey"
+                            name="geminiApiKey"
+                            required
+                            class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-white placeholder-gray-400 hover-glow pr-10"
+                            placeholder="Enter your Gemini API key"
+                          >
+                          <button type="button" class="toggle-password absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white focus:outline-none">
+                            <i class="fas fa-eye"></i>
+                          </button>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-1">Your API key is stored locally and never sent to our servers</p>
+                      </div>
+                      <div>
+                        <label for="unsplashApiKey" class="block text-sm font-medium text-gray-300 mb-2">Unsplash API Key</label>
+                        <div class="relative">
+                          <input
+                            type="password"
+                            id="unsplashApiKey"
+                            name="unsplashApiKey"
+                            required
+                            class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-white placeholder-gray-400 hover-glow pr-10"
+                            placeholder="Enter your Unsplash API key"
+                          >
+                          <button type="button" class="toggle-password absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white focus:outline-none">
+                            <i class="fas fa-eye"></i>
+                          </button>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-1">Your API key is stored locally and never sent to our servers</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Video Details Section -->
+                  <div class="glassmorphism p-4 rounded-lg">
+                    <h3 class="text-lg font-semibold mb-3 neon-glow">Video Details</h3>
+                    <div class="space-y-4">
+                      <div>
+                        <label for="topic" class="block text-sm font-medium text-gray-300 mb-2">Topic</label>
+                        <input
+                          type="text"
+                          id="topic"
+                          name="topic"
+                          required
+                          class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-white placeholder-gray-400 hover-glow"
+                          placeholder="Enter the video topic"
+                        >
+                      </div>
+                      <div>
+                        <label for="duration" class="block text-sm font-medium text-gray-300 mb-2">Duration (seconds)</label>
+                        <input
+                          type="number"
+                          id="duration"
+                          name="duration"
+                          min="10"
+                          max="300"
+                          required
+                          class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-white placeholder-gray-400 hover-glow"
+                          placeholder="Enter duration in seconds"
+                          value="60"
+                        >
+                      </div>
+                      <div>
+                        <label for="keyPoints" class="block text-sm font-medium text-gray-300 mb-2">Key Points (comma separated)</label>
+                        <textarea
+                          id="keyPoints"
+                          name="keyPoints"
+                          rows="3"
+                          required
+                          class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-white placeholder-gray-400 hover-glow resize-none"
+                          placeholder="Enter key points, separated by commas"
+                        ></textarea>
+                      </div>
+                      <div>
+                        <label for="style" class="block text-sm font-medium text-gray-300 mb-2">Video Style</label>
+                        <select
+                          id="style"
+                          name="style"
+                          required
+                          class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-white placeholder-gray-400 hover-glow"
+                        >
+                          <option value="educational">Educational</option>
+                          <option value="cinematic">Cinematic</option>
+                          <option value="minimalist">Minimalist</option>
+                          <option value="futuristic">Futuristic</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Submit Button -->
+                  <div>
+                    <button
+                      type="submit"
+                      id="generateBtn"
+                      class="w-full py-2.5 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-300 hover-glow"
+                    >
+                      <i class="fas fa-magic mr-2"></i> Generate Video
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <!-- Preview Panel -->
+            <div class="lg:col-span-1">
+              <div class="glassmorphism rounded-xl p-6 shadow-lg">
+                <h2 class="text-2xl font-bold mb-4 cosmic-title neon-glow">Video Preview</h2>
+                <div id="videoPreview" class="video-frame p-4 rounded-lg mb-4 min-h-[200px] flex items-center justify-center bg-black bg-opacity-50">
+                  <div class="text-center">
+                    <i class="fas fa-film text-4xl text-gray-500 mb-3"></i>
+                    <p class="text-gray-300">Preview will appear here</p>
+                  </div>
+                </div>
+                
+                <div id="generationStatus" class="hidden">
+                  <h3 class="text-lg font-semibold mb-2 neon-glow">Generation Status</h3>
+                  <div class="progress-container bg-gray-700 rounded-full h-4 mb-3">
+                    <div id="progressBar" class="progress-bar h-full rounded-full bg-gradient-to-r from-blue-500 to-purple-600" style="width: 0%"></div>
+                  </div>
+                  <p id="statusText" class="text-sm text-gray-300">Preparing to generate...</p>
+                </div>
+                
+                <div id="videoControls" class="hidden mt-4">
+                  <div class="flex space-x-2">
+                    <button class="flex-1 py-2 bg-gray-700 hover:bg-gray-600 text-white font-medium rounded-lg transition-colors">
+                      <i class="fas fa-download mr-1"></i> Download
+                    </button>
+                    <button class="flex-1 py-2 bg-gray-700 hover:bg-gray-600 text-white font-medium rounded-lg transition-colors">
+                      <i class="fas fa-share-alt mr-1"></i> Share
+                    </button>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Quick Tips Card -->
+              <div class="glassmorphism rounded-xl p-6 shadow-lg mt-6">
+                <h3 class="text-lg font-semibold mb-3 neon-glow">Quick Tips</h3>
+                <ul class="text-sm text-gray-300 space-y-2">
+                  <li class="flex">
+                    <i class="fas fa-lightbulb text-yellow-500 mt-1 mr-2"></i>
+                    <span>Be specific with your topic for better results</span>
+                  </li>
+                  <li class="flex">
+                    <i class="fas fa-lightbulb text-yellow-500 mt-1 mr-2"></i>
+                    <span>Separate key points with commas</span>
+                  </li>
+                  <li class="flex">
+                    <i class="fas fa-lightbulb text-yellow-500 mt-1 mr-2"></i>
+                    <span>Optimal duration is between 30-120 seconds</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Templates Tab -->
+        <div class="tab-content" id="templates">
+          <div class="glassmorphism rounded-xl p-6 shadow-lg">
+            <h2 class="text-2xl font-bold mb-4 cosmic-title neon-glow">Templates</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <!-- Template Cards -->
+              <div class="template-card glassmorphism p-4 rounded-lg cursor-pointer hover:border-blue-500 transition-all duration-300">
+                <div class="aspect-video bg-black rounded mb-3 overflow-hidden">
+                  <img src="https://picsum.photos/320/180" alt="Educational Template" class="w-full h-full object-cover">
+                </div>
+                <h3 class="font-semibold text-lg mb-1">Educational</h3>
+                <p class="text-sm text-gray-400">Clear, focused learning content</p>
+              </div>
+              
+              <div class="template-card glassmorphism p-4 rounded-lg cursor-pointer hover:border-blue-500 transition-all duration-300">
+                <div class="aspect-video bg-black rounded mb-3 overflow-hidden">
+                  <img src="https://picsum.photos/320/180" alt="Cinematic Template" class="w-full h-full object-cover">
+                </div>
+                <h3 class="font-semibold text-lg mb-1">Cinematic</h3>
+                <p class="text-sm text-gray-400">Dynamic, engaging visual style</p>
+              </div>
+              
+              <div class="template-card glassmorphism p-4 rounded-lg cursor-pointer hover:border-blue-500 transition-all duration-300">
+                <div class="aspect-video bg-black rounded mb-3 overflow-hidden">
+                  <img src="https://picsum.photos/320/180" alt="Minimalist Template" class="w-full h-full object-cover">
+                </div>
+                <h3 class="font-semibold text-lg mb-1">Minimalist</h3>
+                <p class="text-sm text-gray-400">Clean, distraction-free presentation</p>
+              </div>
+              
+              <div class="template-card glassmorphism p-4 rounded-lg cursor-pointer hover:border-blue-500 transition-all duration-300">
+                <div class="aspect-video bg-black rounded mb-3 overflow-hidden">
+                  <img src="https://picsum.photos/320/180" alt="Futuristic Template" class="w-full h-full object-cover">
+                </div>
+                <h3 class="font-semibold text-lg mb-1">Futuristic</h3>
+                <p class="text-sm text-gray-400">High-tech, innovative presentation</p>
+              </div>
+              
+              <div class="template-card glassmorphism p-4 rounded-lg cursor-pointer hover:border-blue-500 transition-all duration-300 relative">
+                <div class="aspect-video bg-black rounded mb-3 overflow-hidden flex items-center justify-center">
+                  <i class="fas fa-plus text-4xl text-gray-600"></i>
+                </div>
+                <div class="absolute top-2 right-2 bg-blue-500 text-xs px-2 py-1 rounded text-white">
+                  Coming Soon
+                </div>
+                <h3 class="font-semibold text-lg mb-1">Custom Template</h3>
+                <p class="text-sm text-gray-400">Create your own template</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- History Tab -->
+        <div class="tab-content" id="history">
+          <div class="glassmorphism rounded-xl p-6 shadow-lg">
+            <h2 class="text-2xl font-bold mb-4 cosmic-title neon-glow">History</h2>
+            
+            <div id="historyEmpty" class="text-center py-8">
+              <i class="fas fa-history text-5xl text-gray-600 mb-4"></i>
+              <h3 class="text-xl font-semibold mb-2">No videos yet</h3>
+              <p class="text-gray-400">Your generated videos will appear here</p>
+            </div>
+            
+            <div id="historyList" class="hidden space-y-4">
+              <!-- History items will be populated by JavaScript -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Settings Tab -->
+        <div class="tab-content" id="settings">
+          <div class="glassmorphism rounded-xl p-6 shadow-lg">
+            <h2 class="text-2xl font-bold mb-4 cosmic-title neon-glow">Settings</h2>
+            
+            <div class="space-y-6">
+              <!-- API Keys Settings -->
+              <div>
+                <h3 class="text-lg font-semibold mb-3">API Keys</h3>
+                <div class="space-y-4">
+                  <div>
+                    <label for="settingsGeminiApiKey" class="block text-sm font-medium text-gray-300 mb-2">Gemini API Key</label>
+                    <div class="relative">
+                      <input
+                        type="password"
+                        id="settingsGeminiApiKey"
+                        class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-white placeholder-gray-400 hover-glow pr-10"
+                        placeholder="Enter your Gemini API key"
+                      >
+                      <button type="button" class="toggle-password absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white focus:outline-none">
+                        <i class="fas fa-eye"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <div>
+                    <label for="settingsUnsplashApiKey" class="block text-sm font-medium text-gray-300 mb-2">Unsplash API Key</label>
+                    <div class="relative">
+                      <input
+                        type="password"
+                        id="settingsUnsplashApiKey"
+                        class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-white placeholder-gray-400 hover-glow pr-10"
+                        placeholder="Enter your Unsplash API key"
+                      >
+                      <button type="button" class="toggle-password absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white focus:outline-none">
+                        <i class="fas fa-eye"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Video Settings -->
+              <div>
+                <h3 class="text-lg font-semibold mb-3">Video Settings</h3>
+                <div class="space-y-4">
+                  <div>
+                    <label for="defaultDuration" class="block text-sm font-medium text-gray-300 mb-2">Default Duration (seconds)</label>
+                    <input
+                      type="number"
+                      id="defaultDuration"
+                      min="10"
+                      max="300"
+                      class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-white placeholder-gray-400 hover-glow"
+                      value="60"
+                    >
+                  </div>
+                  <div>
+                    <label for="defaultStyle" class="block text-sm font-medium text-gray-300 mb-2">Default Style</label>
+                    <select
+                      id="defaultStyle"
+                      class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-white placeholder-gray-400 hover-glow"
+                    >
+                      <option value="educational">Educational</option>
+                      <option value="cinematic">Cinematic</option>
+                      <option value="minimalist">Minimalist</option>
+                      <option value="futuristic">Futuristic</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- App Settings -->
+              <div>
+                <h3 class="text-lg font-semibold mb-3">App Settings</h3>
+                <div class="space-y-4">
+                  <div class="flex items-center justify-between">
+                    <label for="enableAnimations" class="text-sm font-medium text-gray-300">Enable Animations</label>
+                    <div class="toggle-switch">
+                      <input type="checkbox" id="enableAnimations" checked>
+                      <span class="slider round"></span>
+                    </div>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <label for="darkMode" class="text-sm font-medium text-gray-300">Dark Mode</label>
+                    <div class="toggle-switch">
+                      <input type="checkbox" id="darkMode" checked>
+                      <span class="slider round"></span>
+                    </div>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <label for="autoSave" class="text-sm font-medium text-gray-300">Auto Save History</label>
+                    <div class="toggle-switch">
+                      <input type="checkbox" id="autoSave" checked>
+                      <span class="slider round"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Save Button -->
+              <div>
+                <button id="saveSettings" class="w-full py-2.5 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-300 hover-glow">
+                  Save Settings
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-4 right-4 hidden min-w-[300px] max-w-sm p-4 glassmorphism rounded-lg shadow-lg z-50 transform transition-all duration-300 translate-y-2 opacity-0">
+      <div class="flex items-center">
+        <div id="toastIcon" class="flex-shrink-0 mr-3 text-xl">
+          <i class="fas fa-check-circle text-green-500"></i>
+        </div>
+        <div class="flex-1">
+          <h3 id="toastTitle" class="font-semibold text-white">Success</h3>
+          <p id="toastMessage" class="text-sm text-gray-300">Your changes have been saved.</p>
+        </div>
+        <button id="closeToast" class="ml-4 text-gray-400 hover:text-white">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://cdn.babylonjs.com/babylon.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
+    <script src="../static/script.js"></script>
+  </body>
+</html>

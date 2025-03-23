@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Tutor Chatbot</title>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.chat-container {
+    width: 400px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-header {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.chat-box {
+    flex: 1;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+    background: #f9f9f9;
+}
+
+.chat-input {
+    display: flex;
+}
+
+.chat-input input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+.chat-input button {
+    padding: 10px 20px;
+    background: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.chat-input button:hover {
+    background: #0056b3;
+}
+
+.message {
+    margin-bottom: 10px;
+}
+
+.message.user {
+    text-align: right;
+}
+
+.message.bot {
+    text-align: left;
+}
+
+.message p {
+    display: inline-block;
+    padding: 10px;
+    border-radius: 5px;
+    max-width: 80%;
+}
+
+.message.user p {
+    background: #007bff;
+    color: #fff;
+}
+
+.message.bot p {
+    background: #f1f1f1;
+    color: #333;
+}
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">AI Tutor Chatbot</div>
+        <div class="chat-box" id="chat-box">
+            <!-- Chat messages will appear here -->
+        </div>
+        <div class="chat-input">
+            <input type="text" id="user-input" placeholder="Type your message...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+    <script >
+        function sendMessage() {
+    const userInput = document.getElementById('user-input').value;
+    if (!userInput) return;
+
+    // Add user message to chat box
+    const chatBox = document.getElementById('chat-box');
+    const userMessage = document.createElement('div');
+    userMessage.className = 'message user';
+    userMessage.innerHTML = `<p>${userInput}</p>`;
+    chatBox.appendChild(userMessage);
+
+    // Clear input
+    document.getElementById('user-input').value = '';
+
+    // Send message to backend
+    fetch('/chatbot', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message: userInput }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Add bot response to chat box
+        const botMessage = document.createElement('div');
+        botMessage.className = 'message bot';
+        botMessage.innerHTML = `<p>${data.response}</p>`;
+        chatBox.appendChild(botMessage);
+
+        // Scroll to bottom
+        chatBox.scrollTop = chatBox.scrollHeight;
+    })
+    .catch(error => console.error('Error:', error));
+}
+    </script>
+</body>
+</html>

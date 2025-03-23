@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Analysis Result</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <h1 class="text-3xl font-bold text-center mb-8">Video Analysis Result</h1>
+
+        <!-- Analysis Results -->
+        <div class="bg-white p-6 rounded-lg shadow-md max-w-2xl mx-auto">
+            <h2 class="text-2xl font-bold mb-4">Activities Detected</h2>
+            <ul class="space-y-2">
+                {% for activity, duration in result.activities.items() %}
+                    <li class="text-gray-700">
+                        <span class="font-medium">{{ activity }}:</span> {{ duration|round(2) }} seconds
+                    </li>
+                {% endfor %}
+            </ul>
+            <div class="mt-4 pt-4 border-t border-gray-200">
+                <p class="text-lg font-medium">Total Duration: {{ result.total_duration|round(2) }} seconds</p>
+            </div>
+        </div>
+
+        <!-- Back Button -->
+        <div class="mt-6 text-center">
+            <a href="/" class="inline-block bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                Back to Home
+            </a>
+        </div>
+    </div>
+</body>
+</html>

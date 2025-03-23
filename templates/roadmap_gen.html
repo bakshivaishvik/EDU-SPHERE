@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Road-map Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../static/roadmap_gen.css">
+</head>
+<body>
+    <div class="space-bg"></div>
+    <div class="nebula"></div>
+    <div class="stars-container" id="starsContainer"></div>
+    <div class="grid-lines"></div>
+    
+    <div class="container">
+        <h1>EDUMAP : AI Road-map Generator</h1>
+        <input type="text" id="learn" placeholder="What do you want to learn? (e.g., Python, Data Science)">
+        <input type="text" id="time" placeholder="How much time do you want to spend on it? (e.g., 1 month or 20 days)">
+        <select id="level">
+            <option value="Beginner">Beginner</option>
+            <option value="Intermediate">Intermediate</option>
+            <option value="Advanced">Advanced</option>
+        </select>
+        <button class="glow-button" onclick="generateRoadmap()">Generate Roadmap</button>
+        <div class="nav-container">
+            <button class="nav-button" onclick="window.location.href='http://localhost:5000/videogen';">🎥 EDU-FLICK : Educational Content Generator</button>
+            <button class="nav-button" onclick="window.location.href='http://localhost:5173/';">🧑‍🏫 EDU-TUTOR : 3D Virtual Tutor</button>
+            <button class="nav-button" onclick="window.location.href='http://localhost:5000/analyze';">EDU-LYSIS : Video Analysis</button>
+        </div>
+        <div id="timeline" class="timeline"></div> <!-- Timeline container -->
+    </div>
+
+    <script src="../static/roadmap_gen.js"></script>
+</body>
+</html>

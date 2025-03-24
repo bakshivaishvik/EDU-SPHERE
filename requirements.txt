@@ -1,0 +1,19 @@
+Flask
+Flask-Cors
+Flask-SQLAlchemy
+requests
+beautifulsoup4
+google-generativeai
+pillow
+pydub
+soundfile
+moviepy
+pysrt
+opencv-python
+torch
+transformers
+pymupdf  # PyMuPDF for PDF handling
+python-pptx  # For PPT processing
+werkzeug
+numpy
+kokoro  # Kokoro NLP pipeline

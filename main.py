@@ -21,6 +21,8 @@ import torch
 from transformers import AutoImageProcessor, AutoModelForImageClassification
 import tempfile
 from collections import defaultdict
+from bs4 import BeautifulSoup
+import requests
 ##############################
 
 import fitz  # PyMuPDF for PDFs
@@ -204,41 +206,203 @@ def evaluate():
 
 ##############################
 
-def roadmap(learn, time, level):
-    prompt = f'I want to learn {learn} in {time} and I am at {level}% from the quiz I took just now. Give me a roadmap to learn. Provide a step-by-step guide.make it concise and easy to comprehend'
-    response = model1.generate_content(prompt)
-    
-    # Parse the response into structured data (example)
-    steps = []
-    for line in response.text.split('\n'):
-        if line.strip():
-            steps.append({
-                'title': line.split(':')[0].strip(),
-                'description': line.split(':')[1].strip() if ':' in line else line.strip(),
-                'duration': '1 day',  # Example duration
-                'resources': ['Resource 1', 'Resource 2']  # Example resources
-            })
-    
-    return steps
 
-@app.route('/generate_roadmap', methods=['POST', 'GET'])
+
+# Cache to store already fetched resourcesfrom flask import Flask, request, jsonify, render_template
+from bs4 import BeautifulSoup
+import requests
+import re
+import time
+import datetime
+from urllib.parse import quote_plus, unquote
+
+app = Flask(__name__)
+
+RESOURCE_CACHE = {}
+CLEANING_RULES = [
+    (r'\*{2,}', ''),          # Remove bold/italic markdown
+    (r'#+\s*', ''),           # Remove headings
+    (r'^step \d+[:.]?\s*', ''),  # Remove step numbers
+    (r'\n{2,}', '\n'),        # Remove excessive newlines
+    (r'^\s+', ''),            # Remove leading whitespace
+]
+
+def fetch_learning_resources(topic):
+    """Dynamically fetch learning resources with multiple fallback strategies"""
+    cached = RESOURCE_CACHE.get(topic.lower())
+    if cached:
+        return cached
+
+    resources = []
+    search_attempts = [
+        # Primary attempt with trusted domains
+        {
+            'query': f"best resources to learn {topic} site:youtube.com OR site:github.com OR site:docs.python.org OR site:freecodecamp.org",
+            'validate': lambda url: any(d in url for d in ['youtube.com', 'github.com', 'docs.python.org', 'freecodecamp.org'])
+        },
+        # Secondary attempt with broader search
+        {
+            'query': f"best way to learn {topic} tutorial OR guide",
+            'validate': lambda url: True  # Accept any URL as fallback
+        }
+    ]
+
+    for attempt in search_attempts:
+        try:
+            search_query = quote_plus(attempt['query'])
+            headers = {'User-Agent': 'Mozilla/5.0'}
+            
+            response = requests.get(
+                f"https://www.google.com/search?q={search_query}&num=7",
+                headers=headers,
+                timeout=10
+            )
+            response.raise_for_status()
+
+            soup = BeautifulSoup(response.text, 'html.parser')
+            
+            for result in soup.select('.tF2Cxc, .g, .yuRUbf')[:5]:
+                try:
+                    link = result.find('a')['href']
+                    if link.startswith('/url?q='):
+                        link = unquote(link[7:].split('&')[0])
+                    
+                    title = (result.find('h3') or result.find('h2')).get_text()
+                    title = re.sub(r'\s+', ' ', title).strip()
+                    
+                    if attempt['validate'](link):
+                        resources.append({
+                            'title': title,
+                            'url': link
+                        })
+                        if len(resources) >= 3:
+                            break
+                
+                except Exception:
+                    continue
+
+            if resources:
+                break
+
+        except Exception:
+            continue
+
+    # Final fallback
+    if not resources:
+        resources = [
+            {'title': f'Official {topic} Documentation', 'url': '#'},
+            {'title': f'YouTube {topic} Tutorials', 'url': '#'},
+            {'title': f'Interactive {topic} Course', 'url': '#'}
+        ]
+
+    RESOURCE_CACHE[topic.lower()] = resources
+    return resources
+
+def clean_roadmap_text(text):
+    """Apply multiple cleaning rules to ensure consistent formatting"""
+    for pattern, replacement in CLEANING_RULES:
+        text = re.sub(pattern, replacement, text, flags=re.IGNORECASE | re.MULTILINE)
+    
+    lines = []
+    for line in text.split('\n'):
+        line = line.strip()
+        if line and not line.lower().startswith(('key principle', 'note:', 'tip:')):
+            lines.append(line)
+    
+    return lines
+
+@app.route('/generate_roadmap', methods=['POST','GET'])
 def generate_roadmap():
     if request.method == 'POST':
-        data = request.json
-        learn = data.get('learn')
-        time = data.get('time')
-        level = data.get('level')
+        start_time = time.perf_counter()
+        print('starting roadmap gen')
+        if not request.is_json:
+            return jsonify({
+                'status': 'error',
+                'message': 'JSON content required',
+                'execution_time': f"{(time.perf_counter() - start_time):.2f}s"
+            }), 400
 
-        if not learn or not time or not level:
-            return jsonify({'error': 'Please fill all the fields.'}), 400
+        data = request.get_json()
+        learn = data.get('learn', '').strip()
+        time_frame = data.get('time', '').strip()
+        level = data.get('level', '').strip().lower()
 
-        roadmap_steps = roadmap(learn, time, level)
-        return jsonify({'roadmap': roadmap_steps})
+        if not all([learn, time_frame, level]):
+            return jsonify({
+                'status': 'error',
+                'message': 'Missing required fields',
+                'execution_time': f"{(time.perf_counter() - start_time):.2f}s"
+            }), 400
+
+        if level not in {'beginner', 'intermediate', 'advanced'}:
+            return jsonify({
+                'status': 'error',
+                'message': 'Invalid level specified',
+                'execution_time': f"{(time.perf_counter() - start_time):.2f}s"
+            }), 400
+
+        try:
+            prompt = f"""Create a concise learning roadmap for {learn} suitable for {time_frame} 
+            for {level} level. Follow these rules STRICTLY:
+            1. ONLY include actionable learning steps
+            2. NEVER use markdown, headings, or motivational text
+            3. Format EXACTLY like: "Description text | Duration: X days"
+            4. Return NOTHING else except these steps
+            5. it must be structured exactly like
+            '''Learn core concepts | Duration: 3 days
+Practice with examples | Duration: 5 days
+Build mini-project | Duration: 1 week'''
+            """
+            
+            # Replace with actual API call:
+            response_text = model1.generate_content(prompt)
+            print(response_text)
+            steps = []
+            resources = fetch_learning_resources(learn)
+            
+            for line in clean_roadmap_text(response_text.text):
+                if not line or '|' not in line:
+                    continue
+                    
+                desc, duration = line.split('|', 1)
+                steps.append({
+                    'description': desc.strip(),
+                    'duration': duration.replace('Duration:', '').strip(),
+                    'resources': resources
+                })
+
+            return jsonify({
+                'status': 'success',
+                'data': {
+                    'topic': learn,
+                    'timeframe': time_frame,
+                    'level': level,
+                    'steps': steps,
+                    'resources': [r['title'] for r in resources],
+                    'generated_at': datetime.datetime.now().isoformat(),
+                    'execution_time': f"{(time.perf_counter() - start_time):.2f}s"
+                }
+            })
+
+        except requests.exceptions.RequestException:
+            return jsonify({
+                'status': 'error',
+                'message': 'External service unavailable',
+                'execution_time': f"{(time.perf_counter() - start_time):.2f}s"
+            }), 503
+
+        except Exception:
+            return jsonify({
+                'status': 'error',
+                'message': 'Roadmap generation failed',
+                'execution_time': f"{(time.perf_counter() - start_time):.2f}s"
+            }), 500
     else:
         return render_template('roadmap_gen.html')
 
 
-
+    
 
 #chat app stuff
    

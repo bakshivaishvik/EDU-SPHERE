@@ -246,7 +246,7 @@ def create_video(image_folder: str,
     Start_duration = 0
     
     # Creating the intro clip and appending it to raw clips
-    path_to_background = "C:/Users/Sonu/Desktop/BITS-HECK-FINAL/resources/intro/intro.jpg"
+    path_to_background = "resources/intro/intro.jpg"
     check_file_exists(path_to_background)
     topic = extract_topic_from_json(script_path)
     intro_clip = create_intro_clip(path_to_background, duration=5, topic=topic, font_path=font_path)

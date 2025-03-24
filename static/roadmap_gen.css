@@ -134,6 +134,7 @@
             align-items: center; /* Center children horizontally */
             justify-content: center; /* Center children vertically */
         }
+        
 
         @keyframes fadeIn {
             0% {

@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Road-map Generator</title>
+    <title>EDUMAP : AI Road-map Generator</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../static/roadmap_gen.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <div class="space-bg"></div>
@@ -14,21 +15,68 @@
     <div class="grid-lines"></div>
     
     <div class="container">
-        <h1>EDUMAP : AI Road-map Generator</h1>
-        <input type="text" id="learn" placeholder="What do you want to learn? (e.g., Python, Data Science)">
-        <input type="text" id="time" placeholder="How much time do you want to spend on it? (e.g., 1 month or 20 days)">
-        <select id="level">
-            <option value="Beginner">Beginner</option>
-            <option value="Intermediate">Intermediate</option>
-            <option value="Advanced">Advanced</option>
-        </select>
-        <button class="glow-button" onclick="generateRoadmap()">Generate Roadmap</button>
-        <div class="nav-container">
-            <button class="nav-button" onclick="window.location.href='http://localhost:5000/videogen';">🎥 EDU-FLICK : Educational Content Generator</button>
-            <button class="nav-button" onclick="window.location.href='http://localhost:5173/';">🧑‍🏫 EDU-TUTOR : 3D Virtual Tutor</button>
-            <button class="nav-button" onclick="window.location.href='http://localhost:5000/analyze';">EDU-LYSIS : Video Analysis</button>
+        <div class="header">
+            <h1><i class="fas fa-rocket"></i> EDUMAP</h1>
+            <p class="subtitle">AI-Powered Learning Roadmap Generator</p>
         </div>
-        <div id="timeline" class="timeline"></div> <!-- Timeline container -->
+        
+        <div class="input-card">
+            <div class="form-group">
+                <label for="learn"><i class="fas fa-graduation-cap"></i> What do you want to learn?</label>
+                <input type="text" id="learn" placeholder="e.g., Python, Data Science, Web Development" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="time"><i class="fas fa-clock"></i> Timeframe</label>
+                <input type="text" id="time" placeholder="e.g., 1 month or 20 days" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="level"><i class="fas fa-signal"></i> Current Level</label>
+                <select id="level" required>
+                    <option value="">Select your level</option>
+                    <option value="Beginner">Beginner</option>
+                    <option value="Intermediate">Intermediate</option>
+                    <option value="Advanced">Advanced</option>
+                </select>
+            </div>
+            
+            <button class="glow-button" id="generateBtn" onclick="generateRoadmap()">
+                <i class="fas fa-bolt"></i> Generate Roadmap
+            </button>
+        </div>
+        
+        <div id="loading" class="loading-container">
+            <div class="pulse-orbit">
+                <div class="pulse"></div>
+                <div class="orbit"></div>
+            </div>
+            <p>Scanning the knowledge universe...</p>
+        </div>
+        
+        <div id="results">
+            <div class="results-header">
+                <h2><i class="fas fa-map-marked-alt"></i> Your Learning Path</h2>
+                <div class="meta-info">
+                    <span id="topic-display"></span>
+                    <span id="time-display"></span>
+                    <span id="level-display"></span>
+                </div>
+            </div>
+            <div id="timeline" class="timeline"></div>
+        </div>
+        
+        <div class="nav-container">
+            <button class="nav-button" onclick="window.location.href='http://localhost:5000/videogen';">
+                <i class="fas fa-video"></i> EDU-FLICK
+            </button>
+            <button class="nav-button" onclick="window.location.href='http://localhost:5173/';">
+                <i class="fas fa-robot"></i> EDU-TUTOR
+            </button>
+            <button class="nav-button" onclick="window.location.href='http://localhost:5000/analyze';">
+                <i class="fas fa-chart-line"></i> EDU-LYSIS
+            </button>
+        </div>
     </div>
 
     <script src="../static/roadmap_gen.js"></script>

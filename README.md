@@ -1,4 +1,4 @@
-# BITS-HECK-FINAL
+# EDU-SPHERE
 
 ## Overview
 This project is a comprehensive platform that integrates various functionalities, including video generation, learning resource recommendations, study analysis, and more. It leverages advanced AI models, such as Gemini AI, and tools like Flask, PyTorch, and Transformers to deliver an interactive and educational experience.
